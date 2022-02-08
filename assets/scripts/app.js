@@ -4,6 +4,40 @@ const backdrop = document.getElementById('backdrop')
 const btnCancel = modal.querySelector('.btn--passive')
 const btnConfirm = btnCancel.nextElementSibling
 const inputs = modal.querySelectorAll('input')
+const entryText = document.getElementById('entry-text')
+
+const movies = [];
+
+const updateUi = () => {
+    if (movies.length === 0) {
+        entryText.style.display = 'block'
+
+    } else {
+        entryText.style.display = 'none'
+    }
+}
+
+const renderMovie = (title, image, rating) => {
+    const movieElement = document.createElement('li');
+    movieElement.className = 'movie-element'
+    movieElement.innerHTML = `
+    <div class="movie-element__image">
+        <img src="${image}" alt="${title}" />
+    </div>
+    <div class="movie-element__info">
+        <h2>${title}</h2>
+        <p>${rating}/5 stars</p>
+    </div>
+    `
+    const listRoot = document.getElementById('movie-list');
+    listRoot.append(movieElement)
+}
+
+const renderMovies = (movies) => {
+    const listRoot = document.getElementById('movie-list');
+    listRoot.innerHTML = "";
+    movies.map(movie => renderMovie(movie.title, movie.image, movie.rating))
+}
 
 const toggleBackdrop = () => {
     backdrop.classList.toggle('visible')
@@ -39,8 +73,11 @@ const addMovieHandler = () => {
         rating
     }
 
-    console.log(movie);
+    movies.push(movie)
+    console.log(movies);
     toggleMovieModal();
+    updateUi();
+    renderMovies(movies)
 }
 
 const clearForm = () => {
