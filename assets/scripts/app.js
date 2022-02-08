@@ -12,6 +12,7 @@ const toggleBackdrop = () => {
 const toggleMovieModal = () => {
    modal.classList.toggle('visible')
    toggleBackdrop();
+   clearForm();
 }
 
 const backdropClickHandler = () => {
@@ -23,12 +24,28 @@ const cancelClickHandler = () => {
 }
 
 const addMovieHandler = () => {
-    const titleValue = inputs[0].value
-    const imageValue = inputs[1].value
-    const ratingValue = inputs[2].value
+    const title = inputs[0].value
+    const image = inputs[1].value
+    const rating = inputs[2].value
 
-    if (titleValue.trim() === '' || imageValue.trim() === '' || ratingValue.trim() === '' || +ratingValue < 1 || +ratingValue > 5) {
+    if (title.trim() === '' || image.trim() === '' || rating.trim() === '' || +rating < 1 || +rating > 5) {
         alert('Please input valid values!')
+        return
+    }
+
+    const movie = {
+        title,
+        image,
+        rating
+    }
+
+    console.log(movie);
+    toggleMovieModal();
+}
+
+const clearForm = () => {
+    for (const input of inputs) {
+        input.value =''
     }
 }
 
