@@ -8,37 +8,6 @@ const entryText = document.getElementById('entry-text')
 
 const movies = [];
 
-const updateUi = () => {
-    if (movies.length === 0) {
-        entryText.style.display = 'block'
-
-    } else {
-        entryText.style.display = 'none'
-    }
-}
-
-const renderMovie = (title, image, rating) => {
-    const movieElement = document.createElement('li');
-    movieElement.className = 'movie-element'
-    movieElement.innerHTML = `
-    <div class="movie-element__image">
-        <img src="${image}" alt="${title}" />
-    </div>
-    <div class="movie-element__info">
-        <h2>${title}</h2>
-        <p>${rating}/5 stars</p>
-    </div>
-    `
-    const listRoot = document.getElementById('movie-list');
-    listRoot.append(movieElement)
-}
-
-const renderMovies = (movies) => {
-    const listRoot = document.getElementById('movie-list');
-    listRoot.innerHTML = "";
-    movies.map(movie => renderMovie(movie.title, movie.image, movie.rating))
-}
-
 const toggleBackdrop = () => {
     backdrop.classList.toggle('visible')
 }
@@ -68,15 +37,14 @@ const addMovieHandler = () => {
     }
 
     const movie = {
+        id: Math.random().toString(),
         title,
         image,
         rating
     }
 
     movies.push(movie)
-    console.log(movies);
     toggleMovieModal();
-    updateUi();
     renderMovies(movies)
 }
 
@@ -84,6 +52,45 @@ const clearForm = () => {
     for (const input of inputs) {
         input.value =''
     }
+}
+
+const updateUi = () => {
+    if (movies.length === 0) {
+        entryText.style.display = 'block'
+
+    } else {
+        entryText.style.display = 'none'
+    }
+}
+
+const renderMovie = (id, title, image, rating) => {
+    const movieElement = document.createElement('li');
+    movieElement.addEventListener('click', deleteMovieHandler.bind(null, id))
+    movieElement.className = 'movie-element'
+    movieElement.innerHTML = `
+    <div class="movie-element__image">
+        <img src="${image}" alt="${title}" />
+    </div>
+    <div class="movie-element__info">
+        <h2>${title}</h2>
+        <p>${rating}/5 stars</p>
+    </div>
+    `
+    const listRoot = document.getElementById('movie-list');
+    listRoot.append(movieElement)
+}
+
+const deleteMovieHandler = (id) => {
+    const toDelete = movies.findIndex(movie => movie.id === id)
+    movies.splice(toDelete, 1)
+    renderMovies(movies);
+}
+
+const renderMovies = (movies) => {
+    updateUi();
+    const listRoot = document.getElementById('movie-list');
+    listRoot.innerHTML = "";
+    movies.map(movie => renderMovie(movie.title, movie.image, movie.rating))
 }
 
 addBtn.addEventListener('click', toggleMovieModal )
